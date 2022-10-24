@@ -98,6 +98,8 @@ public class SBinTre<T> {
         // p er nå null, dvs. ute av treet, q er den siste vi passerte
 
         p = new Node<>(verdi,q);                   // oppretter en ny node
+        //verdien er verdi
+        //forelder er q, forid det er den siste vi passerte.
 
         if (q == null) {rot = p; }                 // p blir rotnode
         else if (cmp < 0){ q.venstre = p;}       // venstre barn til q
@@ -117,16 +119,19 @@ public class SBinTre<T> {
     }
 
     public int antall(T verdi) {
-        int forekomster = 0;
+        int forekomster = 0; //teller
 
-        ArrayDeque<Node> queue = new ArrayDeque<>();
-        queue.addLast(rot);
+        ArrayDeque<Node> queue = new ArrayDeque<>(); //lager kø
+        queue.addLast(rot); //legger til roten i køen
 
+        //while løkke hvor vi legger inn alle nodene inn i køen.
+        //Hver gang vi tar ut fra køen, sjekker vi om det er riktig verdi
         while (!queue.isEmpty()) {
-            Node<T> current = queue.removeFirst();
-            int cmp = comp.compare(verdi, current.verdi);
-            if (cmp == 0) forekomster++;
+            Node<T> current = queue.removeFirst();  //tar ut første i køden
+            int cmp = comp.compare(verdi, current.verdi);   //sjekker om dette er riktig verdi
+            if (cmp == 0) forekomster++;    //hvis det er riktig verdi øker vi forekomster
 
+            //legger til barna i køen
             if (current.venstre != null) {
                 queue.addLast(current.venstre);
             }
@@ -145,9 +150,9 @@ public class SBinTre<T> {
     private static <T> Node<T> førstePostorden(Node<T> p) {
 
         while (true) {
-            if (p.venstre != null) {p = p.venstre;}
-            else if (p.høyre != null) {p = p.høyre;}
-            else {return p;}
+            if (p.venstre != null) {p = p.venstre;} //hvis venstrebarn finnes, går vi til den
+            else if (p.høyre != null) {p = p.høyre;}    //hvis høyre barn finnes går vi til den
+            else {return p;}    //har nå kommet til første node i post-orden
         }
     }
 
@@ -176,10 +181,10 @@ public class SBinTre<T> {
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
-        Node <T> p = førstePostorden(rot);
+        Node <T> p = førstePostorden(rot);     //bruker for å finne første noden som skal skrives ut
         while (p!=null){
-            oppgave.utførOppgave(p.verdi);
-            p=nestePostorden(p);
+            oppgave.utførOppgave(p.verdi);      //sender inn verdien som oppgaven trenger
+            p=nestePostorden(p);                //finner neste verdi
         }
     }
 
@@ -188,13 +193,14 @@ public class SBinTre<T> {
     }
 
     private void postordenRecursive(Node<T> p, Oppgave<? super T> oppgave) {
-        if (p.venstre!=null){
+        //postorden måte å lete igjennom hele treet
+        if (p.venstre!=null){   //går inn i venstre barn
             postordenRecursive(p.venstre,oppgave);
         }
-        if(p.høyre!=null){
+        if(p.høyre!=null){  //Går inn i høyre barn
             postordenRecursive(p.høyre,oppgave);
         }
-        oppgave.utførOppgave(p.verdi);
+        oppgave.utførOppgave(p.verdi);  //sender inn verdien som oppgaven trenger.
 
 
     }
