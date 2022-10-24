@@ -10,5 +10,6 @@ Oppgaven er levert av følgende student:
 I oppgave 1 så gikk jeg frem ved å ...
 
 I oppgave 2 så brukte jeg en ... til å ...
+Brukte bredde først søking med kø, også sjekka jeg om elementet i køen var likt. Hvis det var likt så la jeg til forekomster, hvis ikke
 
 h 
