@@ -43,6 +43,14 @@ public class SBinTre<T> {
         comp = c;
     }
 
+    public static void main(String[] args) {
+        Integer[] a = {4,7,2,9,5,10,8,1,3,6};
+        SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
+        for (int verdi : a) {tre.leggInn(verdi); }
+        System.out.println(tre.antall());  // Utskrift: 10
+        System.out.println(tre.toStringPostOrder());
+    }
+
     public boolean inneholder(T verdi) {
         if (verdi == null) return false;
 
@@ -141,11 +149,31 @@ public class SBinTre<T> {
     }
 
     private static <T> Node<T> førstePostorden(Node<T> p) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        while (true) {
+            if (p.venstre != null) p = p.venstre;
+            else if (p.høyre != null) p = p.høyre;
+            else return p;
+        }
     }
 
     private static <T> Node<T> nestePostorden(Node<T> p) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(p.forelder==null){
+            return null;
+        }
+        else if(p==p.forelder.høyre){
+            return p.forelder;
+        }
+        else if(p==p.forelder.venstre){
+            if(p.forelder.høyre==null) return null;
+
+            else if(p.forelder.høyre!=null){
+                p=p.forelder.høyre;
+               nestePostorden(p);
+            }
+
+        }
+        return null;
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
