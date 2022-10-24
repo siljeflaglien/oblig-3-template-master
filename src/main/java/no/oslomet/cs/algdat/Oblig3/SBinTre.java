@@ -43,33 +43,7 @@ public class SBinTre<T> {
         comp = c;
     }
 
-    public static void main(String[] args) {
-        Integer[] a = {4,7,2,9,5,10,8,1,3,6};
-        SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
-        for (int verdi : a) {tre.leggInn(verdi); System.out.println(tre.toString());}
-        System.out.println(tre.antall());  // Utskrift: 10
-        System.out.println(tre.toString());
-    }
-    public String toString(){
-        String ut="";
 
-            ArrayDeque<Node> queue = new ArrayDeque<>();
-            queue.addFirst(rot);
-
-            while (!queue.isEmpty()){
-                Node current = queue.removeFirst();
-                ut += (current.verdi + " ");
-                if (current.venstre != null){
-                    queue.addLast(current.venstre);
-                }
-                if (current.høyre != null){
-                    queue.addLast(current.høyre);
-                }
-
-            }
-            return ut;
-
-    }
 
     public boolean inneholder(T verdi) {
         if (verdi == null) return false;
@@ -125,9 +99,9 @@ public class SBinTre<T> {
 
         p = new Node<>(verdi,q);                   // oppretter en ny node
 
-        if (q == null) rot = p;                  // p blir rotnode
-        else if (cmp < 0) q.venstre = p;         // venstre barn til q
-        else q.høyre = p;                        // høyre barn til q
+        if (q == null) {rot = p; }                 // p blir rotnode
+        else if (cmp < 0){ q.venstre = p;}       // venstre barn til q
+        else {q.høyre = p;}                       // høyre barn til q
 
         antall++;                                // én verdi mer i treet
         return true;                             // vellykket innlegging
@@ -171,31 +145,34 @@ public class SBinTre<T> {
     private static <T> Node<T> førstePostorden(Node<T> p) {
 
         while (true) {
-            if (p.venstre != null) p = p.venstre;
-            else if (p.høyre != null) p = p.høyre;
-            else return p;
+            if (p.venstre != null) {p = p.venstre;}
+            else if (p.høyre != null) {p = p.høyre;}
+            else {return p;}
         }
     }
 
     private static <T> Node<T> nestePostorden(Node<T> p) {
-        Node<T> noden = null;
-        Node <T> forelder=p.forelder;
-        if(forelder==null){
-            noden= null;
-        }
-        else if(p==forelder.høyre){
-            noden=  forelder;
-        }
-        else if(p==forelder.venstre){
-            if(forelder.høyre==null){ noden= forelder;}
 
-            else if(forelder.høyre!=null){
-                p=forelder.høyre;
-               førstePostorden(p);
+        //hvis det er rotnoden
+        if(p.forelder==null){
+            return null;
+        }
+        //hvis det er høyrebarn
+        else if(p==p.forelder.høyre){
+            return p.forelder;
+        }
+        //hvis det er venstre barn
+        else if(p==p.forelder.venstre){
+                //Hvis det er enebarn
+            if(p.forelder.høyre==null){ return p.forelder;}
+
+            //hvis det ikke er enebarn.
+            else {
+                return førstePostorden(p.forelder.høyre);
+                //Finner den første noden i det nye subtreet med høyrebarnet om rot.
             }
-
         }
-        return noden;
+        return null;
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
