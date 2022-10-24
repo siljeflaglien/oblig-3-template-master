@@ -46,9 +46,29 @@ public class SBinTre<T> {
     public static void main(String[] args) {
         Integer[] a = {4,7,2,9,5,10,8,1,3,6};
         SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
-        for (int verdi : a) {tre.leggInn(verdi); }
+        for (int verdi : a) {tre.leggInn(verdi); System.out.println(tre.toString());}
         System.out.println(tre.antall());  // Utskrift: 10
-        System.out.println(tre.toStringPostOrder());
+        System.out.println(tre.toString());
+    }
+    public String toString(){
+        String ut="";
+
+            ArrayDeque<Node> queue = new ArrayDeque<>();
+            queue.addFirst(rot);
+
+            while (!queue.isEmpty()){
+                Node current = queue.removeFirst();
+                ut += (current.verdi + " ");
+                if (current.venstre != null){
+                    queue.addLast(current.venstre);
+                }
+                if (current.høyre != null){
+                    queue.addLast(current.høyre);
+                }
+
+            }
+            return ut;
+
     }
 
     public boolean inneholder(T verdi) {
@@ -158,22 +178,24 @@ public class SBinTre<T> {
     }
 
     private static <T> Node<T> nestePostorden(Node<T> p) {
-        if(p.forelder==null){
-            return null;
+        Node<T> noden = null;
+        Node <T> forelder=p.forelder;
+        if(forelder==null){
+            noden= null;
         }
-        else if(p==p.forelder.høyre){
-            return p.forelder;
+        else if(p==forelder.høyre){
+            noden=  forelder;
         }
-        else if(p==p.forelder.venstre){
-            if(p.forelder.høyre==null) return null;
+        else if(p==forelder.venstre){
+            if(forelder.høyre==null){ noden= forelder;}
 
-            else if(p.forelder.høyre!=null){
-                p=p.forelder.høyre;
-               nestePostorden(p);
+            else if(forelder.høyre!=null){
+                p=forelder.høyre;
+               førstePostorden(p);
             }
 
         }
-        return null;
+        return noden;
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
